@@ -4,7 +4,6 @@ import { styles } from '../styles'
 import { View } from 'react-native';
 
 export default function ActivePlayer(props){
-    //console.log("PLAYER 1", props.player)
     return (
         <View style={styles.myPieces}>
             {props.player.pieces.map((row, rowIndex) => (
