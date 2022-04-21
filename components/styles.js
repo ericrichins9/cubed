@@ -1,7 +1,7 @@
-import React from 'react';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+    //universal
     container: {
         flex: 1,
         alignItems: 'center',
@@ -15,6 +15,16 @@ export const styles = StyleSheet.create({
         padding: 10,
         marginTop: 40
       },
+
+    preAppB: {
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        backgroundColor: 'lightblue',
+    },
+
+    //grid styles-----------------------------
     grid: {
         borderWidth: 2,
         borderColor: 'black',
@@ -25,10 +35,6 @@ export const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
     },
-    rowPieces: {
-        flex: 1,
-        flexDirection: "column",
-    },
     cell: {
         width: '100%',
         height: '100%',
@@ -38,38 +44,36 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+
+    //pieces (circle) styles--------------------------
     myPieces: {
-        //borderWidth: 1,
         flexDirection: 'row',
         marginTop: 80,
-        //borderColor: 'black',
-        //backgroundColor: '#E3EBF8',
         width: "80%",
         aspectRatio: 1.3,
-    },
-    inactiveRow: {
+    }, //"grid" container for pieces (hidden)
+    rowPieces: {
         flex: 1,
-        flexDirection: 'row',
-        borderWidth: 2,
-        borderColor: 'blue'
+        flexDirection: "column",
     },
-    inactiveCell: {
+    hiddenCell: {
         width: '100%',
         height: '100%',
         flex: 1,
-        borderWidth: 2,
-        borderColor: 'black',
         justifyContent: 'center',
         alignItems: 'center',
-    },
+    }, //cells container for pieces (hidden)
+    inactiveRow: {
+        flex: 1,
+        flexDirection: 'row',
+    }, //display when player is inactive
     myInactivePieces: {
-        borderWidth: 1,
         marginTop: 80,
-        borderColor: 'black',
-        backgroundColor: 'white',
         width: "80%",
         aspectRatio: 3,
-    },
+    }, //display when player is inactive
+
+    //circle sizes and dimensions --------------------
     bigCircle: (bigCircle, color) => ({
         width: bigCircle,
         height: bigCircle,

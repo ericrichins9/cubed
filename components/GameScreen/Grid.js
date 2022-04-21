@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { styles } from '../styles'
 
 export default function Grid(props) {
-    //console.log("PROPS", props.grid)
     const setRows = (data) => {
         return {
             type: 'SET_ROWS',
@@ -36,7 +35,7 @@ export default function Grid(props) {
   return (
     <View style={styles.grid} onLayout={({ nativeEvent}) => {
         setGridDimensions(nativeEvent.layout)}}> 
-          {props.grid.map((row, rowIndex) => (
+          {props.grid !== undefined && props.grid.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.row}>
               {row.map((cell, cellIndex) => (
                   <View key={cellIndex} style={styles.cell}>

@@ -3,7 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useSharedValue, useAnimatedStyle, withSpring,} from 'react-native-reanimated';
 import checkVictory from './checkVictory';
-import {setGrid, setVictory, setGamePieces, setCurrentTurn } from './redux/dispatch'
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:3000');
 
 export default function AnimatedCircle(props) {
   let circleSize
@@ -117,11 +119,9 @@ export default function AnimatedCircle(props) {
 
     setTimeout(
       () => {
-      //props.setGrid(newGrid)
-      props.socket.emit('reqTurn', JSON.stringify({ newGrid }), newPlayer)
-      //props.setCurrentPlayer(newPlayer)
+      socket.emit('reqTurn', JSON.stringify({ newGrid }), newPlayer, props.room)
       const hasWon = checkVictory(props.grid)
-      {hasWon ? props.setHasWon(hasWon) : props.setCurrentTurn(props.currentTurn + 1)}
+      props.setHasWon(hasWon)
       console.log("ENDING COMPLETE")
       }, 
       700

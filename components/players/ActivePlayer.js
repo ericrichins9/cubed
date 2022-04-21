@@ -9,7 +9,7 @@ export default function ActivePlayer(props){
             {props.player.pieces.map((row, rowIndex) => (
                 <View key={rowIndex} style={styles.rowPieces}>
                     {row.map((circle, colIndex) => (
-                    <View key={colIndex} style={styles.cell}>
+                    <View key={colIndex} style={styles.hiddenCell}>
                         <AnimatedCircle key={colIndex} rowIndex={rowIndex} colIndex={colIndex} circle={circle} {...props} />                    
                     </View>
                     ))}
