@@ -98,8 +98,8 @@ export default function AnimatedCircle(props) {
     const newMed = {...props.grid[row][col][1]}
     const newSmall = {...props.grid[row][col][2]}
     const newGrid = [...props.grid]
-    const newPlayer = {...props.player}
-    newPlayer.pieces[props.rowIndex][props.colIndex].disabled = true
+    const newMe = {...props.player}
+    newMe.pieces[props.rowIndex][props.colIndex].disabled = true
   
     if (size === 'big') {
       newBig.big = true
@@ -119,10 +119,9 @@ export default function AnimatedCircle(props) {
 
     setTimeout(
       () => {
-      socket.emit('reqTurn', JSON.stringify({ newGrid }), newPlayer, props.room)
+      socket.emit('reqTurn', JSON.stringify({ newGrid }), newMe, props.room)
       const hasWon = checkVictory(props.grid)
       props.setHasWon(hasWon)
-      console.log("ENDING COMPLETE")
       }, 
       700
     )

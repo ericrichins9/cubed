@@ -20,8 +20,12 @@ export default function JoinGame(props) {
       const data = JSON.parse(json)
       props.setGrid(data.newGrid);
     })
-    props.socket.on('newTurn', (turn, room) => {
-      props.setRoom({...room, turnOrder: turn })
+    props.socket.on('newTurn', (turn, room, player) => {
+      //console.log("NEW TURN", player)
+      const newRoom = {...room}
+      newRoom.players[newRoom.turnOrder - 1] = player
+      newRoom.turnOrder = turn
+      props.setRoom(newRoom)
     })
   }, [])
   

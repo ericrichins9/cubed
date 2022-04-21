@@ -11,11 +11,10 @@ const socket = io('http://localhost:3000');
 
 export default function GameScreen(props) {
   const [hasWon, setHasWon] = useState(false)
-  const [players, setPlayers] = useState([])
   const grid = props.grid
   const [rows, setRows] = useState([])
   const [cols, setCols] = useState([])
-  const [me, setMe] = useState(props.me)
+  const me = props.me
   const bigCircle = 85, medCircle = 60, smallCircle = 25
   const currentPlayer = props.room.players[props.room.turnOrder - 1]
 
@@ -38,7 +37,7 @@ export default function GameScreen(props) {
           :  */}
 
            {currentPlayer.id === me.id ?
-            <ActivePlayer setHasWon={setHasWon} currentTurn={props.currentTurn} room={props.room} rows={rows} setRows={setRows} setCols={setCols} cols={cols} bigCircle={bigCircle} medCircle={medCircle} smallCircle={smallCircle} grid={grid} players={players} setPlayers={setPlayers} player={currentPlayer} socket={socket} /> 
+            <ActivePlayer setHasWon={setHasWon} currentTurn={props.currentTurn} room={props.room} rows={rows} setRows={setRows} setCols={setCols} cols={cols} bigCircle={bigCircle} medCircle={medCircle} smallCircle={smallCircle} grid={grid} player={me} socket={socket} /> 
             : 
             <InactivePlayer player={me} currentTurn={props.currentTurn} currentPlayer={currentPlayer} bigCircle={bigCircle} medCircle={medCircle} smallCircle={smallCircle} />
             }
