@@ -8,10 +8,7 @@ import PreApp from './components/PreApp'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { styles } from './components/styles'
-import io from 'socket.io-client';
 import JoinGameScreen from './components/PreApp/JoinGame';
-
-const socket = io('http://localhost:3000');
 
 //let gameStart = false, gameJoined = false
 

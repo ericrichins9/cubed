@@ -1,5 +1,5 @@
 export default function checkVictory(grid){
-    let hasWon = false
+    let winningCombo
     const victoryCombinations = [
         [0,1,2], [3,4,5], [6,7,8], //individual cell combos (row 1)
         [9,10,11], [12,13,14], [15,16,17], //individual cell combos (row 2)
@@ -26,12 +26,12 @@ export default function checkVictory(grid){
 
                     if (combo1 !== undefined && combo2 !== undefined && combo3 !== undefined){
                         if(combo1.color !== '' && combo1.color === combo2.color && combo2.color === combo3.color){
-                            hasWon = true
+                            winningCombo = [combo1, combo2, combo3]
                         }
                     }
             })
         })
     })
-    return hasWon
+    return winningCombo
 }
 

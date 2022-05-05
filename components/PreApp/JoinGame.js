@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import { TouchableOpacity, SafeAreaView, View, Text, TextInput } from 'react-native';
+import { TouchableOpacity, SafeAreaView, View, Text } from 'react-native';
 import { styles } from '../styles'
+import { AntDesign } from '@expo/vector-icons';
+import { TextInput } from 'react-native-paper';
+import {uniqueNamesGenerator, adjectives, animals} from 'unique-names-generator'
 
 export default function JoinGame(props) {
   const [roomId, setRoomId] = useState()
   const [name, onChangeName] = useState();
-  const [numberOfPlayers, setNumberOfPlayers] = useState(0)
 
   useEffect(() => {
     props.socket.on('updatePlayers', (room) => {
@@ -21,57 +23,74 @@ export default function JoinGame(props) {
       props.setGrid(data.newGrid);
     })
     props.socket.on('newTurn', (turn, room, player) => {
-      //console.log("NEW TURN", player)
       const newRoom = {...room}
       newRoom.players[newRoom.turnOrder - 1] = player
       newRoom.turnOrder = turn
       props.setRoom(newRoom)
     })
+    props.socket.on('error', () => {
+      console.log("ERROR")
+      alert("Wrong room code")
+      props.setGameJoined(true)
+      props.setWaiting(false)
+    })
   }, [])
   
-  function joinGame(name, pieces){
-    let color = 'green'
+  function joinGame(name, pieces, p2Color, p3Color, p4Color){
+    if(name === undefined){name = uniqueNamesGenerator({
+      dictionaries: [adjectives, animals],
+      style: 'capital',
+      separator: ' '
+    })}
     const isMyTurn = false
-    if(numberOfPlayers < 4){
-      props.socket.emit('join',  roomId)
-      props.socket.emit('updateRoom', roomId, name, color, isMyTurn, pieces)
-      setNumberOfPlayers(numberOfPlayers + 1)
-      props.setGameJoined(false) 
-      props.setWaiting(true)
-    }
-    else alert("Sorry, this game is full")
+    props.socket.emit('join',  roomId, name, isMyTurn, pieces, p2Color, p3Color, p4Color)
+    props.setGameJoined(false) 
+    props.setWaiting(true)
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ marginBottom: 20 }}>Join Game</Text>
-
-      <TextInput
-        style={styles.input}
-        onChangeText={setRoomId}
-        value={roomId}
-        placeholder={"Room Code"}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeName}
-        value={name}
-        placeholder={"Name"}
-      />
-      
-      <TouchableOpacity
+    <View>
+      <TouchableOpacity style={{marginTop: 30}} onPress={() => props.setGameJoined(false)}>
+        <AntDesign name="leftcircle" size={34} color="white" />
+      </TouchableOpacity>
+    
+      <View style={[styles.container, {minWidth: '85%'}]}>
+        <View>
+          <Text style={styles.screenTitle}>Join Game</Text>
+        </View>
+        <View style={styles.container}>
+        <Text style={styles.text}>Please enter your room code:</Text>
+          <TextInput
+            value={roomId}
+            mode={'outlined'}
+            placeholder={"Room Code"}
+            style={[styles.input, {maxHeight: '25%'}]}
+            onChangeText={setRoomId}
+            activeOutlineColor='#333229'
+            dense
+          />
+        </View>
+        <View style={styles.container}>
+        <Text style={styles.text}>Give yourself an awesome game name:</Text>
+          <TextInput
+            onChangeText={onChangeName}
+            placeholder={"[your name]"}
+            textAlign={'center'}
+            value={name}
+            style={[styles.input, {maxHeight: '25%'}]}
+            mode={'outlined'}
+            dense
+            activeOutlineColor='#333229'
+          />
+        </View>
+        <View style={[styles.container, {justifyContent: 'flex-end'}]}>
+          <TouchableOpacity
             style={styles.button}
-            onPress={() => {joinGame(name, props.pieces)}}
-        >
-          <Text style={{fontSize: 20}}>Join Game!</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.setGameJoined(false)}
-      >
-        <Text style={{fontSize: 20}}>Go Home</Text>
-      </TouchableOpacity>
+            onPress={() => {joinGame(name, props.pieces, props.player2, props.player3, props.player4)}}>
+              <Text style={styles.buttonText}>Join Game!</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }

@@ -1,24 +1,33 @@
 import React, {useState, useEffect} from 'react';
-import { TouchableOpacity, SafeAreaView, View, Text } from 'react-native';
+import { TouchableOpacity, SafeAreaView, View, Text, StatusBar } from 'react-native';
 import { styles } from '../styles'
 import JoinGame from './JoinGame'
 import CreateGame from './CreateGame'
 import WaitingScreen from './Waiting';
 import GameScreen from '../GameScreen';
+import HowToPlay from './HowToPlay/index'
 import io from 'socket.io-client';
+import { LinearGradient } from 'expo-linear-gradient';
+import DemoGrid from './HowToPlay/DemoGrid';
 
-const socket = io('http://localhost:3000');
-
+//const socket = io('https://silver-rabbits-tell-97-117-0-145.loca.lt');
+const socket = io('http://localhost:3000')
 export default function PreApp(props) {
   const [gameCreated, setGameCreated] = useState(false)
   const [gameJoined, setGameJoined] = useState(false)
   const [waiting, setWaiting] = useState(false)
+  const [howToPlay, setHowToPlay] = useState(false)
   const [gameStart, setGameStart] = useState(false)
   const [room, setRoom] = useState({})
   const [roomId, setRoomId] = useState()
   const [isPlayer1, setIsPlayer1] = useState(false)
   const [me, setMe] = useState({}) 
-
+  const [rows, setRows] = useState([])
+  const [cols, setCols] = useState([])
+  const player1 = '#56ff00'
+  const player2 = '#ff8c2c'
+  const player3 = '#00f9ff'
+  const player4 = '#ff00db'
   const [grid, setGrid] = useState([
     [
         [
@@ -57,7 +66,7 @@ export default function PreApp(props) {
     [
         [
             {id: 18, big: false, color: '', isActive: false},
-            {id: 29, med: false, color: '', isActive: false},
+            {id: 19, med: false, color: '', isActive: false},
             {id: 20, small: false, color: '', isActive: false},
         ], // cell 7
         [
@@ -92,40 +101,47 @@ export default function PreApp(props) {
 ]
 
   return (
-    <SafeAreaView style={styles.container}>
-      {gameJoined ? 
-      <JoinGame room={room} socket={socket} setGrid={setGrid} pieces={pieces} setRoom={setRoom} setGameStart={setGameStart} setRoomId={setRoomId} setMe={setMe} setGameJoined={setGameJoined} setWaiting={setWaiting} /> :
+    <SafeAreaView style={styles.home}>
+        <StatusBar barStyle="light-content" />
+        <LinearGradient colors={['#221CC7', 'transparent']} style={styles.background} />
+
+      {
       gameCreated ? 
-      <CreateGame room={room} socket={socket} setGrid={setGrid} pieces={pieces} setIsPlayer1={setIsPlayer1} setMe={setMe} setRoom={setRoom} setWaiting={setWaiting} setGameStart={setGameStart} setRoomId={setRoomId} setGameCreated={setGameCreated} /> :
+      <CreateGame room={room} socket={socket} setGrid={setGrid} pieces={pieces} setIsPlayer1={setIsPlayer1} setMe={setMe} setRoom={setRoom} setWaiting={setWaiting} setGameStart={setGameStart} setRoomId={setRoomId} setGameCreated={setGameCreated} player1={player1} player2={player2} player3={player3} player4={player4}/> :
+      gameJoined ? 
+      <JoinGame room={room} socket={socket} setGrid={setGrid} pieces={pieces} setRoom={setRoom} setGameStart={setGameStart} setRoomId={setRoomId} setMe={setMe} setGameJoined={setGameJoined} setWaiting={setWaiting} player1={player1} player2={player2} player3={player3} player4={player4}/> :
       waiting ? 
-      <WaitingScreen socket={socket} roomId={roomId} room={room} isPlayer1={isPlayer1} gameStart={gameStart} setWaiting={setWaiting} /> :
+      <WaitingScreen socket={socket} roomId={roomId} room={room} isPlayer1={isPlayer1} gameStart={gameStart} setWaiting={setWaiting} player1={player1} player2={player2} player3={player3} player4={player4} /> :
+      howToPlay ?
+      <HowToPlay grid={grid} rows={rows} cols={cols} setRows={setRows} setCols={setCols} setHowToPlay={setHowToPlay} player1={player1} player2={player2} player3={player3} player4={player4}/> :
       gameStart ?
-       <GameScreen grid={grid} socket={socket} room={room} me={me}/> :
-      
+       <GameScreen grid={grid} socket={socket} room={room} me={me} rows={rows} cols={cols} setRows={setRows} setCols={setCols} player1={player1} player2={player2} player3={player3} player4={player4}/> :
+       
       <View>
-        <TouchableOpacity
-            style={styles.button}
-            onPress={() => {setGameCreated(true); setGameJoined(false); setWaiting(false); setGameStart(false)}}
-        >
-          <Text style={{fontSize: 20}}>Create Game</Text>
-        </TouchableOpacity>
+        <Text style={styles.screenTitle}>Cubed</Text>
+        <DemoGrid winningCombo={[9,13,17]} player1={player1} player2={player2} player3={player3} player4={player4} />
+        <View style={styles.createOrJoin}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => {setGameCreated(true); setGameJoined(false); setWaiting(false); setGameStart(false)}}>
+                <Text style={styles.buttonText}>Create Game</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-            style={styles.button}
-            onPress={() => {setGameCreated(false); setGameJoined(true); setWaiting(false); setGameStart(false)}}
-        >
-          <Text style={{fontSize: 20}}>Join Game</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-            style={styles.button}
-            onPress={() => {setGameCreated(false); setGameJoined(false); setWaiting(false); setGameStart(false)}}
-        >
-          <Text style={{fontSize: 20}}>How to Play</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => {setGameCreated(false); setGameJoined(true); setWaiting(false); setGameStart(false)}}>
+                <Text style={styles.buttonText}>Join Game</Text>
+            </TouchableOpacity>
+        </View>
+        <View style={styles.tutorial}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => {setHowToPlay(true); setGameCreated(false); setGameJoined(false); setWaiting(false); setGameStart(false)}}>
+                <Text style={styles.buttonText}>Tutorial</Text>
+            </TouchableOpacity>
+        </View>
       </View>
       }
-
     </SafeAreaView>
   )
 }

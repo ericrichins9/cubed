@@ -3,9 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useSharedValue, useAnimatedStyle, withSpring,} from 'react-native-reanimated';
 import checkVictory from './checkVictory';
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:3000');
 
 export default function AnimatedCircle(props) {
   let circleSize
@@ -60,7 +57,7 @@ export default function AnimatedCircle(props) {
       'worklet';
       const row = findCellLocation(e.absoluteY, props.rows)
       const col = findCellLocation(e.absoluteX, props.cols)
-      const needsToMoveX = e.absoluteX - newVals.value.x - e.absoluteX + props.cols[col] + ((props.cols[col + 1] - props.cols[col] - circleSize) / 2)
+      const needsToMoveX = e.absoluteX - newVals.value.x - e.absoluteX + props.cols[col] + ((props.cols[col + 1] - props.cols[col] - circleSize) / 2) 
       const needsToMoveY = e.absoluteY - newVals.value.y - e.absoluteY + props.rows[row] + ((props.rows[row + 1] - props.rows[row] - circleSize) / 2)
 
       function findCellLocation(e, row){
@@ -119,9 +116,8 @@ export default function AnimatedCircle(props) {
 
     setTimeout(
       () => {
-      socket.emit('reqTurn', JSON.stringify({ newGrid }), newMe, props.room)
-      const hasWon = checkVictory(props.grid)
-      props.setHasWon(hasWon)
+        const hasWon = checkVictory(props.grid)
+        props.socket.emit('reqTurn', JSON.stringify({ newGrid }), newMe, props.room, hasWon)
       }, 
       700
     )
@@ -134,9 +130,9 @@ export default function AnimatedCircle(props) {
   }
 
   return (
-        <GestureDetector gesture={gesture}>
-        {!props.circle.disabled ? <Animated.View pointerEvents = {props.circle.disabled ? "none" : ''} style={[getStyleSize(props.circle.size), animatedStyles]} /> : <View pointerEvents='none' />}
-        </GestureDetector>
+    <GestureDetector gesture={gesture}>
+      {!props.circle.disabled ? <Animated.View pointerEvents = {props.circle.disabled ? "none" : ''} style={[getStyleSize(props.circle.size), animatedStyles]} /> : <View pointerEvents='none' />}
+    </GestureDetector>
   );
 }
 
@@ -150,7 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 6,
     borderColor: color,
-    // position: 'absolute',
+    position: 'absolute',
     marginBottom: 25
 }),
   medCircle: (medCircle, color) => ({
@@ -161,7 +157,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       borderWidth: 6,
       borderColor: color,
-      //position: 'absolute',
+      position: 'absolute',
   }),
   smallCircle: (smallCircle, color) => ({
       width: smallCircle,
@@ -172,7 +168,7 @@ const styles = StyleSheet.create({
       borderWidth: 5,
       borderColor: color,
       backgroundColor: color,
-      marginTop: -12
-      //position: 'absolute',
+      marginTop: -12,
+      position: 'absolute',
   }),
   });

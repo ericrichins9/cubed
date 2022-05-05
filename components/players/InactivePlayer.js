@@ -1,12 +1,13 @@
 import React from 'react'
 import {styles} from '../styles'
 import { View, Text } from 'react-native';
+import Grid from '../GameScreen/Grid'
 
 export default function InactivePlayer(props){
     return (
-        <View>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <View>
-                <Text>Waiting for {props.currentPlayer.name} to take their turn...</Text>
+                <Text style={styles.text}>Waiting for {props.currentPlayer.name} to take their turn...</Text>
             </View>
             <View style={styles.myInactivePieces}>
                     <View style={styles.inactiveRow}>
