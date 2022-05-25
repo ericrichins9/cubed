@@ -19,7 +19,7 @@ export default function DemoGrid(props) {
                 {id: 5, small: true, color: props.player4},
             ], // cell 2
             [
-                {id: 6, big: true, color: props.player2},
+                {id: 6, big: false, color: ''},
                 {id: 7, med: true, color: props.player2},
                 {id: 8, small: true, color: props.player4},
             ], // cell 3
@@ -33,7 +33,7 @@ export default function DemoGrid(props) {
             [
                 {id: 12, big: true, color: props.player4},
                 {id: 13, med: false, color: ''},
-                {id: 14, small: false, color: ''},
+                {id: 14, small: true, color: props.player2},
             ], // cell 5
             [
                 {id: 15, big: true, color: props.player4},
@@ -55,7 +55,7 @@ export default function DemoGrid(props) {
             [
                 {id: 24, big: false, color: ''},
                 {id: 25, med: false, color: ''},
-                {id: 26, small: true, color: props.player4},
+                {id: 26, small: true, color: props.player3},
             ], // cell 9
         ], // row 3
       ])
@@ -125,7 +125,7 @@ export default function DemoGrid(props) {
     }
 
   return (
-    <View style={styles.grid} onLayout={({ nativeEvent}) => {
+    <View style={[styles.grid, {marginTop: 30}]} onLayout={({ nativeEvent}) => {
         setGridDimensions(nativeEvent.layout)}}> 
           {grid.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>

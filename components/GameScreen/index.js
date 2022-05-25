@@ -14,11 +14,11 @@ export default function GameScreen(props) {
   const currentPlayer = props.room.players[props.room.turnOrder - 1]
 
   return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
           <Grid grid={grid} winningCombo={props.room.winningCombo} bigCircle={bigCircle} medCircle={medCircle} smallCircle={smallCircle} rows={props.rows} setRows={props.setRows} cols={props.cols} setCols={props.setCols} />
 
           {props.room.gameEnd ? 
-          <Victory me={me} currentPlayer={currentPlayer} />
+          <Victory socket={props.socket} room={props.room} grid={grid} me={me} currentPlayer={currentPlayer} />
           : 
            currentPlayer.id === me.id ?
             <ActivePlayer {...props} bigCircle={bigCircle} medCircle={medCircle} smallCircle={smallCircle} grid={grid} player={me} /> 

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { TouchableOpacity, SafeAreaView, View, Text } from 'react-native';
+import { TouchableOpacity, KeyboardAvoidingView, View, Text } from 'react-native';
 import { styles } from '../styles'
 import { AntDesign } from '@expo/vector-icons';
 import { TextInput } from 'react-native-paper';
@@ -8,33 +8,6 @@ import {uniqueNamesGenerator, adjectives, animals} from 'unique-names-generator'
 export default function JoinGame(props) {
   const [roomId, setRoomId] = useState()
   const [name, onChangeName] = useState();
-
-  useEffect(() => {
-    props.socket.on('updatePlayers', (room) => {
-      props.setRoom(room)
-      props.setMe(room.players[room.players.length - 1])
-    })
-    props.socket.on('gameStart', (room) => {
-      props.setWaiting(false)
-      props.setGameStart(true)
-    })
-    props.socket.on('newGrid', (json) => {
-      const data = JSON.parse(json)
-      props.setGrid(data.newGrid);
-    })
-    props.socket.on('newTurn', (turn, room, player) => {
-      const newRoom = {...room}
-      newRoom.players[newRoom.turnOrder - 1] = player
-      newRoom.turnOrder = turn
-      props.setRoom(newRoom)
-    })
-    props.socket.on('error', () => {
-      console.log("ERROR")
-      alert("Wrong room code")
-      props.setGameJoined(true)
-      props.setWaiting(false)
-    })
-  }, [])
   
   function joinGame(name, pieces, p2Color, p3Color, p4Color){
     if(name === undefined){name = uniqueNamesGenerator({
@@ -50,38 +23,43 @@ export default function JoinGame(props) {
 
   return (
     <View>
-      <TouchableOpacity style={{marginTop: 30}} onPress={() => props.setGameJoined(false)}>
+      <TouchableOpacity style={{marginTop: 30, marginLeft: -10}} onPress={() => props.setGameJoined(false)}>
         <AntDesign name="leftcircle" size={34} color="white" />
       </TouchableOpacity>
     
-      <View style={[styles.container, {minWidth: '85%'}]}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1, justifyContent: 'space-around'}}>
         <View>
           <Text style={styles.screenTitle}>Join Game</Text>
         </View>
+
         <View style={styles.container}>
-        <Text style={styles.text}>Please enter your room code:</Text>
+        <Text style={styles.text}>enter cubed code:</Text>
+        <View style={{width: '50%'}}>
           <TextInput
             value={roomId}
             mode={'outlined'}
-            placeholder={"Room Code"}
-            style={[styles.input, {maxHeight: '25%'}]}
+            placeholder={"Cubed Code"}
+            style={styles.input}
             onChangeText={setRoomId}
             activeOutlineColor='#333229'
             dense
           />
+          </View>
         </View>
         <View style={styles.container}>
         <Text style={styles.text}>Give yourself an awesome game name:</Text>
+          <View style={{width: '50%'}}>
           <TextInput
             onChangeText={onChangeName}
             placeholder={"[your name]"}
             textAlign={'center'}
             value={name}
-            style={[styles.input, {maxHeight: '25%'}]}
+            style={styles.input}
             mode={'outlined'}
             dense
             activeOutlineColor='#333229'
           />
+          </View>
         </View>
         <View style={[styles.container, {justifyContent: 'flex-end'}]}>
           <TouchableOpacity
@@ -90,7 +68,7 @@ export default function JoinGame(props) {
               <Text style={styles.buttonText}>Join Game!</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }

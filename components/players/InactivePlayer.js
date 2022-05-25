@@ -5,12 +5,12 @@ import Grid from '../GameScreen/Grid'
 
 export default function InactivePlayer(props){
     return (
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{alignItems: 'center'}}>
             <View>
                 <Text style={styles.text}>Waiting for {props.currentPlayer.name} to take their turn...</Text>
             </View>
-            <View style={styles.myInactivePieces}>
-                    <View style={styles.inactiveRow}>
+            <View style={styles.myPieces}>
+                    <View style={[styles.row, {alignItems: 'flex-start', marginTop: 70}]}>
                     {props.player.pieces.map((row, rowIndex) => (
                         <View key={rowIndex} style={styles.hiddenCell}>
                         {!row[0].disabled ? <View style={styles.bigCircle(props.bigCircle, props.player.color)} /> : <View />}

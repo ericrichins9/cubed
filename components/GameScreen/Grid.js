@@ -1,10 +1,10 @@
-import React, {useEffect, useRef} from 'react'
-import { View, Animated } from 'react-native';
+import React, {useEffect, useRef, createRef} from 'react'
+import { View, Animated, StatusBar } from 'react-native';
 import { styles } from '../styles'
 
 export default function Grid(props) {
     const anim = useRef(new Animated.Value(1));
-
+    const gridView = createRef(null)
     useEffect(() => {
       // makes the sequence loop
       Animated.loop(
@@ -24,46 +24,47 @@ export default function Grid(props) {
           }),
         ])
       ).start();
-    }, []);
 
-    function setGridDimensions(location){
-        const width = location.width / 3
+      gridView.current.measure((x, y, width, height, pageX, pageY) => {
+        const rowWidth = width / 3
         const newRows = [...props.rows]
-        newRows[0] = (location.y + 45)
-        newRows[1] = (width + location.y + 45)
-        newRows[2] = ((width * 2) + location.y + 45)
-        newRows[3] = (location.height + location.y + 45)
+        newRows[0] = (pageY + StatusBar.currentHeight)
+        newRows[1] = (rowWidth + pageY + StatusBar.currentHeight)
+        newRows[2] = ((rowWidth * 2) + pageY + StatusBar.currentHeight)
+        newRows[3] = (width + pageY + StatusBar.currentHeight)
+        //console.log("ROWS", newRows)
         props.setRows(newRows)
         const newCols = [...props.cols]
-        newCols[0] = (location.x + 40)
-        newCols[1] = (width + location.x + 40)
-        newCols[2] = ((width * 2) + location.x + 40)
-        newCols[3] = (location.height + location.x + 40)
+        newCols[0] = (pageX)
+        newCols[1] = (rowWidth + pageX)
+        newCols[2] = ((rowWidth * 2) + pageX)
+        newCols[3] = (width + pageX)
+        //console.log("COLS", newCols)
         props.setCols(newCols)
-    }
+        })
+    }, []);  
 
   return (
-    <View style={styles.grid} onLayout={({ nativeEvent}) => {
-        setGridDimensions(nativeEvent.layout)}}> 
+    <View style={styles.grid} ref={gridView}>
           {props.grid.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
                 {row.map((cell, cellIndex) => (
                     <View key={cellIndex} style={styles.cell}>
-                    {props.winningCombo !== undefined && cell[0].big &&
+                    {props.winningCombo.length === 3 && cell[0].big &&
                         (cell[0].id === props.winningCombo[0].id || cell[0].id === props.winningCombo[1].id || cell[0].id === props.winningCombo[2].id) 
                     ? 
                     <Animated.View style={[styles.pulsing(props.bigCircle, cell[0].color), {transform: [{ scale: anim.current }]}]} /> 
                     : 
                     cell[0].big ? <View style={styles.bigCircle(props.bigCircle, cell[0].color)} /> : <View />}
 
-                    {props.winningCombo !== undefined && cell[1].med &&
+                    {props.winningCombo.length === 3 && cell[1].med &&
                         (cell[1].id === props.winningCombo[0].id || cell[1].id === props.winningCombo[1].id || cell[1].id === props.winningCombo[2].id) 
                     ? 
                     <Animated.View style={[styles.pulsing(props.medCircle, cell[1].color), {transform: [{ scale: anim.current }]}]} />
                     :
                     cell[1].med ? <View style={styles.medCircle(props.medCircle, cell[1].color)} /> : <View />}
                     
-                    {props.winningCombo !== undefined && cell[2].small &&
+                    {props.winningCombo.length === 3 && cell[2].small &&
                         (cell[2].id === props.winningCombo[0].id || cell[2].id === props.winningCombo[1].id || cell[2].id === props.winningCombo[2].id) 
                     ? 
                     <Animated.View style={[styles.pulsing(props.smallCircle, cell[2].color), {transform: [{ scale: anim.current }]}]} />

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { TouchableOpacity, View, Text } from 'react-native';
+import { TouchableOpacity, KeyboardAvoidingView, View, Text } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import * as Clipboard from 'expo-clipboard';
 import { styles } from '../styles'
@@ -17,32 +17,6 @@ export default function CreateGame(props) {
     Clipboard.setString(roomId)
     setCodeCopied(true)
   }
-
-  useEffect(() => {
-    props.socket.on('updatePlayers', (room) => {
-      props.setRoom(room)
-      props.setMe(room.players[0])
-    })
-    props.socket.on('gameStart', (room) => {
-      props.setWaiting(false)
-      props.setGameStart(true)
-    })
-    props.socket.on('newGrid', (json) => {
-      const data = JSON.parse(json)
-      props.setGrid(data.newGrid);
-    })
-    props.socket.on('newTurn', (turn, room, player) => {
-      const newRoom = {...room}
-      newRoom.players[newRoom.turnOrder - 1] = player
-      newRoom.turnOrder = turn
-      props.setRoom(newRoom)
-    })
-    props.socket.on('error', () => {
-      alert("Sorry, something went wrong. Please try again")
-      props.setGameCreated(true)
-      props.setWaiting(false)
-    })
-  }, [])
 
   function createGame(name, pieces, room, color){
     if(name === undefined){name = uniqueNamesGenerator({
@@ -73,53 +47,61 @@ useEffect(() => {setRoomId(randRoom)}, [])
       <TouchableOpacity style={{marginTop: 30}} onPress={() => props.setGameCreated(false)}>
         <AntDesign name="leftcircle" size={34} color="white" />
       </TouchableOpacity>
-    
-      <View style={styles.container}>
-        <View style={styles.container}>
-        <Text style={styles.screenTitle}>Create Game</Text>
+      
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1, justifyContent: 'space-evenly'}}>
+        <View>
+          <Text style={styles.screenTitle}>Create Game</Text>
         </View>
+
         <View style={styles.container}>
-        <Text style={styles.text}>Give this code to friends and have them join:</Text>
+          <Text style={styles.text}>Give this code to friends and have them join:</Text>
+          <View style={{width: '50%'}}>
+            <TextInput
+              value={roomId}
+              mode={'outlined'}
+              disabled
+              textAlign={'center'}
+              style={styles.input}
+              dense
+            />
+          </View>
+          <TouchableOpacity style={{ padding: 5 }} onPress={copyToClipboard}>
+            <Text style={styles.text}>copy</Text>
+          </TouchableOpacity>
 
-        <TextInput
-          value={roomId}
-          mode={'outlined'}
-          disabled
-          textAlign={'center'}
-          style={styles.input}
-          dense
-        />
-
-        <TouchableOpacity style={{ padding: 5 }} onPress={copyToClipboard}>
-          <Text style={styles.text}>copy</Text>
-        </TouchableOpacity>
-
-        <FadeInOut visible={codeCopied} duration={400} scale={true}>
-          <Text style={styles.copiedText}> copied to clipboard</Text>
-        </FadeInOut>
+          <FadeInOut visible={codeCopied} duration={400} scale={true}>
+            <Text style={{textAlign: 'center',fontSize: 15,color: '#fff',fontStyle: 'italic'}}> 
+              copied to clipboard
+            </Text>
+          </FadeInOut>
         </View>
+
         <View style={styles.container}>
-        <Text style={styles.text}>Give yourself an awesome game name:</Text>
-        <TextInput
-          onChangeText={onChangeName}
-          placeholder={"[your name]"}
-          textAlign={'center'}
-          value={name}
-          style={styles.input}
-          mode={'outlined'}
-          dense
-          activeOutlineColor='#333229'
-        />
-        </View>
-        <View style={[styles.container, {justifyContent: 'flex-end'}]}>
+          <Text style={styles.text}>Give yourself an awesome game name:</Text>
+          <View style={{width: '50%'}}>
+          <TextInput 
+            onChangeText={onChangeName}
+            placeholder={"[your name]"}
+            textAlign={'center'}
+            value={name}
+            style={styles.input}
+            mode={'outlined'}
+            dense
+            activeOutlineColor='#333229'
+          />
+          </View>
+          </View>
+        
+
+        <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => createGame(name, props.pieces, roomId, props.player1)}
         >
-          <Text style={styles.buttonText}>Let's Play!</Text>
+          <Text style={styles.buttonText}>Generate Room</Text>
         </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }

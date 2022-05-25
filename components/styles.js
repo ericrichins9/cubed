@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, StatusBar } from 'react-native';
 
 export const styles = StyleSheet.create({
     //universal
@@ -9,6 +9,11 @@ export const styles = StyleSheet.create({
         top: 0,
         height: '90%',
       },
+    safeArea: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      },
     home: {
         flex: 1,
         alignItems: 'center',
@@ -16,20 +21,11 @@ export const styles = StyleSheet.create({
         backgroundColor: '#0093E9',
     },
     container: {
-        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'pink',
-        // borderColor: 'green',
-        // borderWidth: 2,
     },
     input: {
-        //height: 70,
-        //margin: 12
-        //padding: 10,
         textAlign: 'center',
-        minWidth: '60%',
-        maxHeight: '30%',
         fontSize: 14,
         color: '#333229',
         fontWeight: 'bold'
@@ -42,40 +38,23 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         padding: 15,
-        marginBottom: 20,
+        marginBottom: 30,
         marginTop: 20,
       },
-      text: {
-        backgroundColor: 'transparent',
-        fontSize: 15,
-        color: '#fff',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        margin: 12
+    text: {
+      backgroundColor: 'transparent',
+      fontSize: 15,
+      color: '#fff',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      margin: 12
       },
-      copiedText: {
-        backgroundColor: 'transparent',
-        fontSize: 15,
-        color: '#fff',
-        marginBottom: 55,
-        fontStyle: 'italic'
+    buttonText: {
+      backgroundColor: 'transparent',
+      fontSize: 15,
+      color: '#333229',
+      fontWeight: 'bold',
       },
-      buttonText: {
-        backgroundColor: 'transparent',
-        fontSize: 15,
-        color: '#333229',
-        fontWeight: 'bold',
-      },
-      createOrJoin: {
-        justifyContent: 'space-evenly',
-        alignItems: "center",
-        flexDirection: 'row',
-      },
-      tutorial: {
-        justifyContent: 'center',
-        alignItems: "center",
-      },
-
     rulesText: {
         marginTop: 50,
         marginBottom: 30,
@@ -88,8 +67,6 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     screenTitle: {
-        //marginTop: 50,
-        //marginBottom: 30,
         marginLeft: 10,
         marginRight: 10,
         fontSize: 22,
@@ -100,12 +77,12 @@ export const styles = StyleSheet.create({
 
     //grid styles-----------------------------
     grid: {
-        borderWidth: 1.5,
+        alignItems: 'center',
+        borderWidth: 1.4,
         borderColor: '#FCF6F5FF',
         width: "80%",
+        marginTop: 12,
         aspectRatio: 1,
-        marginTop: 30,
-        marginBottom: 30
     },
     row: {
         flex: 1,
@@ -130,30 +107,20 @@ export const styles = StyleSheet.create({
     //pieces (circle) styles--------------------------
     myPieces: {
         flexDirection: 'row',
-        marginTop: 80,
         width: "80%",
         aspectRatio: 1.3,
+        borderWidth: 1,
+        borderColor: 'white'
     }, //"grid" container for pieces (hidden)
-    rowPieces: {
-        flex: 1,
-        flexDirection: "column",
-    },
+
     hiddenCell: {
         width: '100%',
-        height: '100%',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'white'
     }, //cells container for pieces (hidden)
-    inactiveRow: {
-        flex: 1,
-        flexDirection: 'row',
-    }, //display when player is inactive
-    myInactivePieces: {
-        marginTop: 80,
-        width: "80%",
-        aspectRatio: 3,
-    }, //display when player is inactive
 
     //circle sizes and dimensions --------------------
     pulsing: (size, color) => ({

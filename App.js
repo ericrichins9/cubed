@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import {Picker} from '@react-native-picker/picker'
 import GameScreen from './components/GameScreen';
 import WaitingScreen from './components/PreApp/Waiting';
 import PreApp from './components/PreApp'

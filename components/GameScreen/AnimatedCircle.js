@@ -60,6 +60,7 @@ export default function AnimatedCircle(props) {
       const needsToMoveX = e.absoluteX - newVals.value.x - e.absoluteX + props.cols[col] + ((props.cols[col + 1] - props.cols[col] - circleSize) / 2) 
       const needsToMoveY = e.absoluteY - newVals.value.y - e.absoluteY + props.rows[row] + ((props.rows[row + 1] - props.rows[row] - circleSize) / 2)
 
+      //console.log("ENDING", e.absoluteX, e.absoluteY, row, col)
       function findCellLocation(e, row){
         let returnVal = 4
         if(e > row[2] && e < row[3]){returnVal = 2}//third row OR col
@@ -131,7 +132,13 @@ export default function AnimatedCircle(props) {
 
   return (
     <GestureDetector gesture={gesture}>
-      {!props.circle.disabled ? <Animated.View pointerEvents = {props.circle.disabled ? "none" : ''} style={[getStyleSize(props.circle.size), animatedStyles]} /> : <View pointerEvents='none' />}
+      {!props.circle.disabled ? 
+        <Animated.View 
+          //pointerEvents = {props.circle.disabled ? "none" : ''} 
+          style={[getStyleSize(props.circle.size),animatedStyles]} /> 
+        : 
+        <View />
+      }
     </GestureDetector>
   );
 }
@@ -146,8 +153,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 6,
     borderColor: color,
-    position: 'absolute',
-    marginBottom: 25
 }),
   medCircle: (medCircle, color) => ({
       width: medCircle,
@@ -157,7 +162,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       borderWidth: 6,
       borderColor: color,
-      position: 'absolute',
+      marginTop: 8
   }),
   smallCircle: (smallCircle, color) => ({
       width: smallCircle,
@@ -168,7 +173,5 @@ const styles = StyleSheet.create({
       borderWidth: 5,
       borderColor: color,
       backgroundColor: color,
-      marginTop: -12,
-      position: 'absolute',
   }),
   });
