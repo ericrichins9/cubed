@@ -125,7 +125,7 @@ export default function DemoGrid(props) {
     }
 
   return (
-    <View style={[styles.grid, {marginTop: 30}]} onLayout={({ nativeEvent}) => {
+    <View style={[styles.grid, {width: '80%', marginTop: 30}]} onLayout={({ nativeEvent}) => {
         setGridDimensions(nativeEvent.layout)}}> 
           {grid.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>

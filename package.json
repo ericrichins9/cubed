@@ -12,6 +12,7 @@
   "dependencies": {
     "@expo/ngrok": "^4.1.0",
     "@react-native-clipboard/clipboard": "^1.8.5",
+    "@react-native-picker/picker": "2.2.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "expo": "~44.0.0",
@@ -25,6 +26,7 @@
     "react-native": "0.64.3",
     "react-native-confetti": "^0.1.0",
     "react-native-confetti-cannon": "^1.5.2",
+    "react-native-countdown-circle-timer": "^3.0.9",
     "react-native-fade-in-out": "^1.0.6",
     "react-native-gesture-handler": "^2.1.1",
     "react-native-paper": "^4.12.1",
@@ -39,7 +41,7 @@
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
     "unique-names-generator": "^4.7.1",
-    "@react-native-picker/picker": "2.2.1"
+    "react-native-svg": "12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

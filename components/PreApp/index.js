@@ -11,8 +11,8 @@ import io from 'socket.io-client';
 import { LinearGradient } from 'expo-linear-gradient';
 import DemoGrid from './HowToPlay/DemoGrid';
 
-const socket = io('https://six-dryers-repeat-97-117-0-145.loca.lt');
-//const socket = io('http://localhost:3000')
+//const socket = io('https://eager-islands-argue-65-130-22-175.loca.lt');
+const socket = io('http://localhost:3000')
 export default function PreApp(props) {
   const [gameCreated, setGameCreated] = useState(false)
   const [gameJoined, setGameJoined] = useState(false)
@@ -26,6 +26,11 @@ export default function PreApp(props) {
   const [me, setMe] = useState({}) 
   const [rows, setRows] = useState([])
   const [cols, setCols] = useState([])
+  const [hasTimer, setHasTimer] = useState(false);
+  const [isBombed, setIsBombed] = useState(false);
+  const [isEgged, setIsEgged] = useState(false);
+  const [centerDisabled, setCenterDisabled] = useState(false);
+  const [time, setTime] = useState(14);
   const player1 = '#56ff00'
   const player2 = '#ff8c2c'
   const player3 = '#00f9ff'
@@ -103,7 +108,7 @@ export default function PreApp(props) {
 ]
 
 useEffect(() => {
-    socket.on('updateRoom', (room) => {setRoom(room)})
+    socket.on('updateRoom', (serverRoom) => {setRoom(serverRoom)})
 
     socket.on('updateMe', (player) => {setMe(player)})
 
@@ -111,14 +116,22 @@ useEffect(() => {
       setWaiting(false)
       setGameStart(true)
     })
-    socket.on('newGrid', (json) => {
-      const data = JSON.parse(json)
-      setGrid(data.newGrid);
+    socket.on('newGrid', (grid, room) => {
+      const data = JSON.parse(grid)
+      const newGrid = data.newGrid
+
+      if (newGrid[1][1][1].disabled && room.players.length === room.turnNumber && room.players.length > 1){
+        newGrid[1][1][1].med = false
+        newGrid[1][1][1].disabled = false
+        newGrid[1][1][1].color = ''
+        }
+      setGrid(newGrid);
     })
     socket.on('newTurn', (turn, room, player) => {
       const newRoom = {...room}
       newRoom.players[newRoom.turnOrder - 1] = player
       newRoom.turnOrder = turn
+      newRoom.turnNumber ++
       setRoom(newRoom)
     })
     socket.on('error', () => {
@@ -149,15 +162,20 @@ useEffect(() => {
       gameCreated ? 
       <CreateGame room={room} socket={socket} setGrid={setGrid} pieces={pieces} setIsPlayer1={setIsPlayer1} setMe={setMe} setRoom={setRoom} setWaiting={setWaiting} setGameStart={setGameStart} setRoomId={setRoomId} setGameCreated={setGameCreated} player1={player1} player2={player2} player3={player3} player4={player4}/> :
       gameJoined ? 
+
       <JoinGame room={room} socket={socket} setGrid={setGrid} pieces={pieces} setRoom={setRoom} setGameStart={setGameStart} setRoomId={setRoomId} setMe={setMe} setGameJoined={setGameJoined} setWaiting={setWaiting} player1={player1} player2={player2} player3={player3} player4={player4}/> :
       waiting ? 
+
       <WaitingScreen socket={socket} roomId={roomId} room={room} isPlayer1={isPlayer1} gameStart={gameStart} setGameSettings={setGameSettings} setWaiting={setWaiting} player1={player1} player2={player2} player3={player3} player4={player4} /> :
       gameSettings ?
-      <GameSettings setGameSettings={setGameSettings} setWaiting={setWaiting} /> :
+
+      <GameSettings gameStart={gameStart} socket={socket} room={room} setGrid={setGrid} grid={grid} setGameSettings={setGameSettings} setGameStart={setGameStart} setWaiting={setWaiting} time={time} setTime={setTime} hasTimer={hasTimer} setHasTimer={setHasTimer} isEgged={isEgged} setIsEgged={setIsEgged} isBombed={isBombed} setIsBombed={setIsBombed} centerDisabled={centerDisabled} setCenterDisabled={setCenterDisabled} /> :
       howToPlay ?
+
       <HowToPlay grid={grid} rows={rows} cols={cols} setRows={setRows} setCols={setCols} setHowToPlay={setHowToPlay} player1={player1} player2={player2} player3={player3} player4={player4}/> :
       gameStart ?
-       <GameScreen grid={grid} socket={socket} room={room} me={me} rows={rows} cols={cols} setRows={setRows} setCols={setCols} player1={player1} player2={player2} player3={player3} player4={player4}/> :
+      
+      <GameScreen grid={grid} socket={socket} room={room} me={me} rows={rows} cols={cols} setGameSettings={setGameSettings} setWaiting={setWaiting} setRows={setRows} setCols={setCols} player1={player1} player2={player2} player3={player3} player4={player4}/> :
        
       <View>
         <Text style={styles.screenTitle}>Cubed</Text>

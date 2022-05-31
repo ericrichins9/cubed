@@ -1,10 +1,49 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useSharedValue, useAnimatedStyle, withSpring,} from 'react-native-reanimated';
 import checkVictory from './checkVictory';
 
 export default function AnimatedCircle(props) {
+  const newMe = {...props.player}
+
+  function randNum(max) {
+    return Math.floor(Math.random() * max);
+  }
+  function checkBombStatus(newPiece){
+    let loop = true
+    if(newPiece.isBombed === true){
+      while (loop === true) {
+        let randA = randNum(3)
+        let randB = randNum(3)
+        if(newMe.pieces[randA][randB].disabled !== true){
+          newMe.pieces[randA][randB].disabled = true
+          loop = false
+        }
+      }
+      Alert.alert(
+          "💣 You lost a piece  💣"
+        )
+    }
+  }
+
+  function checkEggStatus(newPiece){
+    let loop = true
+    if(newPiece.isEgged === true){
+      while (loop === true) {
+        let randA = randNum(3)
+        let randB = randNum(3)
+        if(newMe.pieces[randA][randB].disabled === true){
+          newMe.pieces[randA][randB].disabled = false
+          loop = false
+        }
+      }
+      Alert.alert( 
+          "🥚 You got a piece back 🥚"
+      )
+    }
+  }
+
   let circleSize
 
   if(props.circle.size === 'big'){
@@ -96,23 +135,22 @@ export default function AnimatedCircle(props) {
     const newMed = {...props.grid[row][col][1]}
     const newSmall = {...props.grid[row][col][2]}
     const newGrid = [...props.grid]
-    const newMe = {...props.player}
     newMe.pieces[props.rowIndex][props.colIndex].disabled = true
   
     if (size === 'big') {
-      newBig.big = true
-      newBig.color = props.player.color
-      newGrid[row][col][0] = newBig
+      newBig.big = true, newBig.color = props.player.color, newGrid[row][col][0] = newBig
+      checkBombStatus(newBig)
+      checkEggStatus(newBig)
     }
     else if (size === 'med') {
-      newMed.med = true
-      newMed.color = props.player.color
-      newGrid[row][col][1] = newMed
+      newMed.med = true, newMed.color = props.player.color, newGrid[row][col][1] = newMed
+      checkBombStatus(newMed)
+      checkEggStatus(newMed)
     }
     else if (size === 'small') {
-      newSmall.small = true
-      newSmall.color = props.player.color
-      newGrid[row][col][2] = newSmall
+      newSmall.small = true, newSmall.color = props.player.color, newGrid[row][col][2] = newSmall
+      checkBombStatus(newSmall)
+      checkEggStatus(newSmall)
     }
 
     setTimeout(
@@ -170,6 +208,7 @@ const styles = StyleSheet.create({
       borderRadius: 50,
       alignItems: 'center',
       justifyContent: 'center',
+      marginTop: -32,
       borderWidth: 5,
       borderColor: color,
       backgroundColor: color,

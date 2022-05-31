@@ -43,7 +43,7 @@ export default function WaitingScreen(props){
             : 
           null}
 
-          <View style={styles.grid}>
+          <View style={[styles.grid, {width: '80%'}]}>
             <View style={styles.row}>
               <View style={styles.waitingCell}>
                 <View>

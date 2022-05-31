@@ -24,6 +24,11 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    gameSettingsContainer: {
+      alignItems: 'center', 
+      justifyContent: 'space-between', 
+      flexDirection: 'row'
+    },
     input: {
         textAlign: 'center',
         fontSize: 14,
@@ -38,7 +43,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         padding: 15,
-        marginBottom: 30,
+        marginBottom: 40,
         marginTop: 20,
       },
     text: {
@@ -56,10 +61,7 @@ export const styles = StyleSheet.create({
       fontWeight: 'bold',
       },
     rulesText: {
-        marginTop: 50,
-        marginBottom: 30,
-        marginLeft: 10,
-        marginRight: 10,
+        marginTop: 10,
         fontSize: 22,
         maxWidth: '80%',
         textAlign: 'center',
@@ -67,8 +69,8 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     screenTitle: {
-        marginLeft: 10,
-        marginRight: 10,
+        // marginLeft: 10,
+        // marginRight: 10,
         fontSize: 22,
         textAlign: 'center',
         color: '#FCF6F5FF',
@@ -80,7 +82,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1.4,
         borderColor: '#FCF6F5FF',
-        width: "80%",
+        width: "90%",
         marginTop: 12,
         aspectRatio: 1,
     },
@@ -107,10 +109,10 @@ export const styles = StyleSheet.create({
     //pieces (circle) styles--------------------------
     myPieces: {
         flexDirection: 'row',
-        width: "80%",
+        width: "100%",
         aspectRatio: 1.3,
-        borderWidth: 1,
-        borderColor: 'white'
+        // borderWidth: 1,
+        // borderColor: 'white'
     }, //"grid" container for pieces (hidden)
 
     hiddenCell: {
@@ -118,8 +120,8 @@ export const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: 'white'
+        // borderWidth: 1,
+        // borderColor: 'white'
     }, //cells container for pieces (hidden)
 
     //circle sizes and dimensions --------------------
